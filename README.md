@@ -10,7 +10,7 @@ This Helm chart deploys a LibreTranslate instance on a Kubernetes cluster using 
 ## Setup helm chart repository
 
 ```bash
-helm repo add libretranslate https://libretranslate.github.io/helm-chart/
+helm repo add libretranslate https://small-hack.github.io/libretranslate-elm-chart/
 helm repo update
 helm search repo libretranslate
 ```
