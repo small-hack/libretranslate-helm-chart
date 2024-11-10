@@ -127,6 +127,12 @@ adminUser:
   name: "YWRtaW4K"  # copy the username in base64 as a reference
   auth: "YWRtaW46JGFwcjEkYlpydmYvUFYkSHBHSlhqZU1EN0ZON2kyYndsMVRNMQoK"  # copy the output from the htpasswd command here as a reference
   password: "bXlTZWNyZXRQYXNzd29yZAo="  # copy the password as base64 for the admin user here as a reference
+  existingSecret: "" # use an existing secret for admin user
+  # key in existing secret
+  secretKeys:
+    name: "name"
+    auth: "auth"
+    password: "password"
 
 # Settings / Flags
 appSettings:
@@ -140,6 +146,12 @@ appSettings:
   disableWebUi:          "false"    # Disable web ui (Default: Web Ui enabled)
   updateModels:          "false"    # Update language models at startup (Default: Only on if no models found)
   metrics:               "false"    # Enable the /metrics endpoint for exporting Prometheus usage metrics (Default: Disabled)
+  existingSecret: "" # use an existing secret for api key origin and secret
+  # keys in existing secret
+  secretKeys:
+    apiKeyorigin: "origin"
+    apiKeysecret: "secret"
+
 
 # Configuration Parameters
 appConfig:

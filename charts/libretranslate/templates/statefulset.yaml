@@ -106,19 +106,31 @@ spec:
                   name: libretranslate-appsettings
                   key: apiKeys
             {{- end }}
-            {{- if and (.Values.appSettings.requireApiKeyOrigin) (ne .Values.appSettings.requireApiKeyOrigin "") }}
+            {{- if or .Values.appSettings.requireApiKeyOrigin .Values.appSettings.existingSecret }}
             - name: LT_REQUIRE_API_KEY_ORIGIN
               valueFrom:
+                {{- if not .Values.appSettings.existingSecret }}
                 configMapKeyRef:
                   name: libretranslate-appsettings
                   key: requireApiKeyOrigin
+                {{- else }}
+                secretKeyRef:
+                  name: {{ .Values.appSettings.existingSecret }}
+                  key: {{ .Values.appSettings.secretKeys.origin }}
+                {{- end }}
             {{- end }}
-            {{- if and (.Values.appSettings.requireApiKeySecret) (ne .Values.appSettings.requireApiKeySecret "") }}
+            {{- if and .Values.appSettings.requireApiKeySecret .Values.appSettings.existingSecret }}
             - name: LT_REQUIRE_API_KEY_SECRET
               valueFrom:
+                {{- if not .Values.appSettings.existingSecret }}
                 configMapKeyRef:
                   name: libretranslate-appsettings
                   key: requireApiKeySecret
+                {{- else }}
+                secretKeyRef:
+                  name: {{ .Values.appSettings.existingSecret }}
+                  key: {{ .Values.appSettings.secretKeys.secret }}
+                {{- end }}
             {{- end }}
             {{- if and (.Values.appSettings.suggestions) (ne .Values.appSettings.suggestions "") }}
             - name: LT_SUGGESTIONS
