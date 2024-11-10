@@ -30,8 +30,12 @@ data:
   debug: {{ .Values.appSettings.debug | squote }}
   ssl: {{ .Values.appSettings.ssl | squote }}
   apiKeys: {{ .Values.appSettings.apiKeys | squote }}
+  {{- if and (not .Values.appSettings.existingSecret) (not .Values.appSettings.secretKeys.origin) }}
   requireApiKeyOrigin: {{ .Values.appSettings.requireApiKeyOrigin | squote }}
+  {{- end }}
+  {{- if and (not .Values.appSettings.existingSecret) (not .Values.appSettings.secretKeys.secret) }}
   requireApiKeySecret: {{ .Values.appSettings.requireApiKeySecret | squote }}
+  {{- end }}
   suggestions: {{ .Values.appSettings.suggestions | squote }}
   disableFilesTranslation: {{ .Values.appSettings.disableFilesTranslation | squote }}
   disableWebUi: {{ .Values.appSettings.disableWebUi | squote }}
