@@ -97,22 +97,22 @@ resources:
     memory: 1Gi
 
 # Readiness probe for kubernetes
-readinessProbe:
-  exec:
-    command:
-    - /app/venv/bin/python
-    - /app/scripts/healthcheck.py
-  initialDelaySeconds: 10
-  periodSeconds: 5
+readinessProbe: {}
+#   exec:
+#     command:
+#     - /app/venv/bin/python
+#     - /app/scripts/healthcheck.py
+#   initialDelaySeconds: 10
+#   periodSeconds: 5
 
 # Liveness probe for kubernetes
-livenessProbe:
-  exec:
-    command:
-    - /app/venv/bin/python
-    - scripts/healthcheck.py
-  initialDelaySeconds: 10
-  periodSeconds: 5
+livenessProbe: {}
+#   exec:
+#     command:
+#     - /app/venv/bin/python
+#     - scripts/healthcheck.py
+#   initialDelaySeconds: 10
+#   periodSeconds: 5
 
 # Auth secret for basic authentication
 # generate base64-user-password-pair with:

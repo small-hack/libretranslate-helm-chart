@@ -80,10 +80,14 @@ spec:
               {{- toYaml .Values.podSecurityContext | nindent 12 }}
             {{- end }}
             allowPrivilegeEscalation: false
+          {{- with .Values.readinessProbe }}
           readinessProbe:
-            {{- toYaml .Values.readinessProbe | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.livenessProbe }}
           livenessProbe:
-            {{- toYaml .Values.livenessProbe | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           env:
             {{- if and (.Values.appSettings.debug) (ne .Values.appSettings.debug "") }}
             - name: LT_DEBUG
