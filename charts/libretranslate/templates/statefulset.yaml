@@ -20,7 +20,12 @@ spec:
         {{- toYaml .Values.podAnnotations | nindent 8 }}
         {{- end }}
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- if and .Values.appSettings.requireApiKeySecret (not .Values.appSettings.existingSecret) }}
+        checksum/secret-api-key: {{ include (print $.Template.BasePath "/secret-api-key.yaml") . | sha256sum }}
+        {{- end }}
+        {{- if and .Values.adminUser.auth (not .Values.adminUser.existingSecret) }}
+        checksum/secret-auth: {{ include (print $.Template.BasePath "/secret-auth.yaml") . | sha256sum }}
+        {{- end }}
       labels:
         {{- include "libretranslate.selectorLabels" . | nindent 8 }}
     spec:
@@ -119,7 +124,7 @@ spec:
                   key: {{ .Values.appSettings.secretKeys.apiKeyorigin }}
                 {{- end }}
             {{- end }}
-            {{- if and .Values.appSettings.requireApiKeySecret .Values.appSettings.existingSecret }}
+            {{- if or .Values.appSettings.requireApiKeySecret (and .Values.appSettings.existingSecret .Values.appSettings.secretKeys.apiKeysecret) }}
             - name: LT_REQUIRE_API_KEY_SECRET
               valueFrom:
                 secretKeyRef:
