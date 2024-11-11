@@ -116,7 +116,7 @@ spec:
                 {{- else }}
                 secretKeyRef:
                   name: {{ .Values.appSettings.existingSecret }}
-                  key: {{ .Values.appSettings.secretKeys.origin }}
+                  key: {{ .Values.appSettings.secretKeys.apiKeyorigin }}
                 {{- end }}
             {{- end }}
             {{- if and .Values.appSettings.requireApiKeySecret .Values.appSettings.existingSecret }}
@@ -129,7 +129,7 @@ spec:
                 {{- else }}
                 secretKeyRef:
                   name: {{ .Values.appSettings.existingSecret }}
-                  key: {{ .Values.appSettings.secretKeys.secret }}
+                  key: {{ .Values.appSettings.secretKeys.apiKeysecret }}
                 {{- end }}
             {{- end }}
             {{- if and (.Values.appSettings.suggestions) (ne .Values.appSettings.suggestions "") }}
