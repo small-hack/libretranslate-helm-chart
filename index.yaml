@@ -2,6 +2,19 @@ apiVersion: v1
 entries:
   libretranslate:
   - apiVersion: v2
+    created: "2024-11-11T01:48:22.355433262Z"
+    description: A Helm chart for Kubernetes to deploy LibreTranslate API
+    digest: ad8beb1005e72e566126d396ab60e5d54dff70266ebb3cdba5aa03e6297f2314
+    home: https://libretranslate.github.io/helm-chart/
+    icon: https://libretranslate.com/static/favicon.ico
+    name: libretranslate
+    sources:
+    - https://github.com/LibreTranslate/LibreTranslate/
+    - https://github.com/LibreTranslate/helm-chart/
+    urls:
+    - libretranslate-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
     created: "2024-11-11T01:37:22.802164076Z"
     description: A Helm chart for Kubernetes to deploy LibreTranslate API
     digest: 3b1b5a938278b604b078d9ef6e2fcf38a93e290f0ce517e5422b518f0898e999
@@ -40,4 +53,4 @@ entries:
     urls:
     - libretranslate-0.1.2.tgz
     version: 0.1.2
-generated: "2024-11-11T01:37:22.80218236Z"
+generated: "2024-11-11T01:48:22.355450385Z"
