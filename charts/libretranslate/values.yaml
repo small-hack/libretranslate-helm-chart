@@ -149,7 +149,7 @@ appSettings:
   existingSecret: "" # use an existing secret for api key origin and secret
   # keys in existing secret
   secretKeys:
-    apiKeyorigin: "origin"
+    apiKeyorigin: ""
     apiKeysecret: "secret"
 
 

@@ -110,7 +110,7 @@ spec:
                   name: libretranslate-appsettings
                   key: apiKeys
             {{- end }}
-            {{- if or .Values.appSettings.requireApiKeyOrigin .Values.appSettings.existingSecret }}
+            {{- if or .Values.appSettings.requireApiKeyOrigin (and .Values.appSettings.existingSecret .Values.appSettings.secretKeys.apiKeyorigin) }}
             - name: LT_REQUIRE_API_KEY_ORIGIN
               valueFrom:
                 {{- if not .Values.appSettings.existingSecret }}
@@ -126,12 +126,11 @@ spec:
             {{- if and .Values.appSettings.requireApiKeySecret .Values.appSettings.existingSecret }}
             - name: LT_REQUIRE_API_KEY_SECRET
               valueFrom:
+                secretKeyRef:
                 {{- if not .Values.appSettings.existingSecret }}
-                configMapKeyRef:
-                  name: libretranslate-appsettings
+                  name: {{ include "libretranslate.fullname" . }}-api-key
                   key: requireApiKeySecret
                 {{- else }}
-                secretKeyRef:
                   name: {{ .Values.appSettings.existingSecret }}
                   key: {{ .Values.appSettings.secretKeys.apiKeysecret }}
                 {{- end }}
