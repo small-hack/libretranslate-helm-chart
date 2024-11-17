@@ -1,6 +1,6 @@
 # libretranslate
 
-![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square)
+![Version: 0.4.3](https://img.shields.io/badge/Version-0.4.3-informational?style=flat-square)
 
 A Helm chart for Kubernetes to deploy LibreTranslate API
 
@@ -23,14 +23,14 @@ A Helm chart for Kubernetes to deploy LibreTranslate API
 | adminUser.secretKeys.name | string | `"name"` |  |
 | adminUser.secretKeys.password | string | `"password"` |  |
 | annotations | object | `{}` | Extra annotations |
-| appConfig.apiKeysDbPath | string | `"/app/db/api_keys.db"` | Use a specific path inside the container for the local database. Can be absolute or relative (Default: /app/db/api_keys.db) |
-| appConfig.apiKeysDbPathMount | string | `"/app/db"` | Use a specific path inside the container for the local database. Must be the same as apiKeysDbPath (Default: /app/db) |
+| appConfig.apiKeysDbPath | string | `"/app/db/api_keys.db"` | Use a specific path inside the container for the local database. Can be absolute or relative |
+| appConfig.apiKeysDbPathMount | string | `"/app/db"` | Use a specific path inside the container for the local database. Must be the same as apiKeysDbPath |
 | appConfig.apiKeysRemote | string | `""` | Use this remote endpoint to query for valid API keys instead of using the local database (Default: Empty (use local db instead)) |
 | appConfig.batchLimit | string | `"null"` | Set maximum number of texts to translate in a batch request (Default: No limit) |
 | appConfig.charLimit | string | `"null"` | Set character limit (Default: No limit) |
-| appConfig.frontendLanguageSource | string | `"auto"` | Set frontend default language - source (Default: auto) |
-| appConfig.frontendLanguageTarget | string | `"locale"` | Set frontend default language - target (Default: locale (match site's locale)) |
-| appConfig.frontendTimeout | string | `"500"` | Set frontend translation timeout (Default: 500) |
+| appConfig.frontendLanguageSource | string | `"auto"` | Set frontend default language - source |
+| appConfig.frontendLanguageTarget | string | `"locale"` | Set frontend default language - target. Default is to match site's locale |
+| appConfig.frontendTimeout | string | `"500"` | Set frontend translation timeout |
 | appConfig.gaId | string | `""` | Enable Google Analytics on the API client page by providing an ID (Default: Empty (no tracking)) |
 | appConfig.getApiKeyLink | string | `""` | Show a link in the UI where to direct users to get an API key (Default: Empty (no link shown on web ui)) |
 | appConfig.host | string | `"0.0.0.0"` | Set host to bind the server to (Default: 127.0.0.1) |
@@ -38,8 +38,8 @@ A Helm chart for Kubernetes to deploy LibreTranslate API
 | appConfig.metricsAuthToken | string | `""` | Protect the /metrics endpoint by allowing only clients that have a valid Authorization Bearer token (Default: Empty (no auth required)) |
 | appConfig.port | string | `"5000"` | Set port to bind the server to (Default: 5000) |
 | appConfig.reqLimit | string | `"null"` | Set maximum number of requests per minute per client (outside of limits set by api keys) (Default: No limit) |
-| appConfig.reqLimitStorage | string | `"memory://"` | Storage URI to use for request limit data storage. See Flask Limiter (Default: memory://) |
-| appConfig.sharedStorage | string | `"memory://"` | Shared storage URI to use for multi-process data sharing (e.g. when using gunicorn) (Default: memory://) |
+| appConfig.reqLimitStorage | string | `"memory://"` | Storage URI to use for request limit data storage. See Flask Limiter |
+| appConfig.sharedStorage | string | `"memory://"` | Shared storage URI to use for multi-process data sharing (e.g. when using gunicorn) |
 | appConfig.threads | string | `"4"` | Set number of threads (Default: 4) |
 | appConfig.urlPrefix | string | `""` | Add prefix to URL: example.com:5000/url-prefix/ (Default: /) |
 | appSettings.apiKeys | string | `"false"` |  |
