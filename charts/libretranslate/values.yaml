@@ -26,6 +26,7 @@ image:
   pullPolicy: IfNotPresent
   # -- this defaults to appVersion in Chart.yaml, but you can override it
   tag: ""
+
 # Using a Private Registry
 # If you want to use a custom image from a private registry, you'll need to
 # create an image pull secret with the registry's credentials:
@@ -37,6 +38,8 @@ imagePullSecrets: []
 # Service settings
 service:
   type: ClusterIP
+  # -- targetPort for the service. If you update this,
+  # you also need to update appConfig.port to match
   port: 5000
 
 # Ingress settings
@@ -77,22 +80,21 @@ podSecurityContext:
   runAsGroup: 1032
 
 # Persistent settings
-# if you don't want to download a copy of the models per pod, you can use a
-# shared storage like an nfs storage class and set it to ReadWriteMany. this way
-# if you scale the pods later on, they will all use the same models and won't
-# duplicate the space and download requests.
 persistence:
+  # enable persistence
   enabled: false
+
   db:
     storageClass: ""
-    accessMode: "ReadWriteOnce"
+    accessMode: ""
     size: "1Gi"
     # -- use an existing persistent volume claim for the database. Setting this
     # will ignore all other persistence.db parameters
     existingClaim: ""
+
   models:
     storageClass: ""
-    accessMode: "ReadWriteOnce"
+    accessMode: ""
     # -- as of August 2023, the models are about 6.6GB in size for all languages
     size: "10Gi"
     # -- use an existing persistent volume claim for the models. Setting this
