@@ -363,7 +363,7 @@ spec:
     - metadata:
         name: models-volume
         labels:
-          {{- include "libretranslate.labels" . | nindent 8 }}
+          {{- include "libretranslate.labels" . | nindent 10 }}
       spec:
         accessModes:
           - {{ .Values.persistence.models.accessMode }}
@@ -378,7 +378,7 @@ spec:
     - metadata:
         name: db-volume
         labels:
-          {{- include "libretranslate.labels" . | nindent 8 }}
+          {{- include "libretranslate.labels" . | nindent 10 }}
       spec:
         accessModes:
           - {{ .Values.persistence.db.accessMode }}
