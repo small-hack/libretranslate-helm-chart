@@ -14,6 +14,7 @@ This Helm chart deploys a LibreTranslate instance on a Kubernetes cluster using 
   - using an existing Kubernetes Secret for a default API key
 - add automatic release notes in the GitHub Releases
 - use exact `appVersion` for the current version of the LibreTranslate docker image
+- renovateBot is used to keep the dependencies of everything in this repo up to date
 
 We will try to submit all of these changes upstream if the repo becomes maintained again.
 
