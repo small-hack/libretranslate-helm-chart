@@ -57,7 +57,7 @@ spec:
                 echo "The models directory is not empty, skipping model installation."
               fi
 
-              {{- if or .Values.appSettings.requireApiKeySecret (and .Values.appSettings.existingSecret .Values.appSettings.secretKeys.apiKeysecret) }}
+              {{- if or .Values.appSettings.requireApiKeySecret (and .Values.appSettings.existingSecret .Values.appSettings.secretKeys.apiKeySecret) }}
               echo "Setting up your default api key..."
               ltmanage keys add --key ${LT_REQUIRE_API_KEY_SECRET} ${DEFAULT_API_KEY_LIMIT} || echo "something went wrong with adding the api key"
               {{- end }}
@@ -66,7 +66,7 @@ spec:
               mountPath: /home/libretranslate/.local/share/argos-translate
             - name: db-volume
               mountPath: {{ .Values.appConfig.apiKeysDbPathMount }}
-          {{- if or .Values.appSettings.requireApiKeySecret (and .Values.appSettings.existingSecret .Values.appSettings.secretKeys.apiKeysecret) }}
+          {{- if or .Values.appSettings.requireApiKeySecret (and .Values.appSettings.existingSecret .Values.appSettings.secretKeys.apiKeySecret) }}
           env:
             - name: LT_REQUIRE_API_KEY_SECRET
               valueFrom:
@@ -76,7 +76,7 @@ spec:
                   key: requireApiKeySecret
                 {{- else }}
                   name: {{ .Values.appSettings.existingSecret }}
-                  key: {{ .Values.appSettings.secretKeys.apiKeysecret }}
+                  key: {{ .Values.appSettings.secretKeys.apiKeySecret }}
                 {{- end }}
             {{- if (ne .Values.appConfig.reqLimit "null") }}
             - name: DEFAULT_API_KEY_LIMIT
