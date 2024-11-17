@@ -5,14 +5,15 @@ This Helm chart deploys a LibreTranslate instance on a Kubernetes cluster using 
 ### Prerequisites
 
 - Kubernetes 1.30+
-- Helm 3.6+
+- Helm 3.16+
 
 ## Updates from the forked repo include
 
-- using an existing persistent volume claim
-- using an existing Kubernetes Secret for a default API key
-- release notes in the GitHub Releases
-- setting the exact appVersion for the current version of LibreTranslate
+- using an existing Persistent Volume Claim
+- set a default api key
+  - using an existing Kubernetes Secret for a default API key
+- add automatic release notes in the GitHub Releases
+- use exact `appVersion` for the current version of the LibreTranslate docker image
 
 We will try to submit all of these changes upstream if the repo becomes maintained again.
 
