@@ -1,6 +1,6 @@
 # libretranslate
 
-![Version: 0.6.1](https://img.shields.io/badge/Version-0.6.1-informational?style=flat-square) ![AppVersion: v1.6.2](https://img.shields.io/badge/AppVersion-v1.6.2-informational?style=flat-square)
+![Version: 0.6.2](https://img.shields.io/badge/Version-0.6.2-informational?style=flat-square) ![AppVersion: v1.6.2](https://img.shields.io/badge/AppVersion-v1.6.2-informational?style=flat-square)
 
 A Helm chart for Kubernetes to deploy LibreTranslate API
 
@@ -90,7 +90,7 @@ A Helm chart for Kubernetes to deploy LibreTranslate API
 | podSecurityContext.runAsUser | int | `1032` |  |
 | readinessProbe | object | `{}` | Readiness probe for kubernetes |
 | replicaCount | int | `1` | Number of replicas |
-| resources.limits.cpu | int | `1` |  |
+| resources.limits.cpu | string | `"2000m"` |  |
 | resources.limits.memory | string | `"2Gi"` |  |
 | resources.requests.cpu | string | `"500m"` |  |
 | resources.requests.memory | string | `"1Gi"` |  |
