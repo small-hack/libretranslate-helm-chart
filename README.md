@@ -1,11 +1,21 @@
 # LibreTranslate Helm Chart
 
-This Helm chart deploys a LibreTranslate instance on a Kubernetes cluster using the Helm package manager.
+This Helm chart deploys a LibreTranslate instance on a Kubernetes cluster using the Helm package manager. This is a fork of [libretranslate/helm](https://github.com/libretranslate/helm) with some quality of life updates.
 
-## Prerequisites
+### Prerequisites
 
-- Kubernetes 1.12+
-- Helm 3.0+
+- Kubernetes 1.30+
+- Helm 3.16+
+
+## Updates from the forked repo include
+
+- using an existing Persistent Volume Claim
+- set a default api key
+  - using an existing Kubernetes Secret for a default API key
+- add automatic release notes in the GitHub Releases
+- use exact `appVersion` for the current version of the LibreTranslate docker image
+
+We will try to submit all of these changes upstream if the repo becomes maintained again.
 
 ## Setup helm chart repository
 

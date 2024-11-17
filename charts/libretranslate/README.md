@@ -1,10 +1,16 @@
 # libretranslate
 
-![Version: 0.4.3](https://img.shields.io/badge/Version-0.4.3-informational?style=flat-square)
+![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![AppVersion: v1.6.2](https://img.shields.io/badge/AppVersion-v1.6.2-informational?style=flat-square)
 
 A Helm chart for Kubernetes to deploy LibreTranslate API
 
 **Homepage:** <https://libretranslate.github.io/helm-chart/>
+
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| jessebot |  | <https://github.com/jessebot> |
 
 ## Source Code
 
@@ -15,10 +21,10 @@ A Helm chart for Kubernetes to deploy LibreTranslate API
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| adminUser.auth | string | `"YWRtaW46JGFwcjEkYlpydmYvUFYkSHBHSlhqZU1EN0ZON2kyYndsMVRNMQoK"` | copy the output from the htpasswd command here as a reference |
+| adminUser.auth | string | `""` | copy the output from the htpasswd command here as a reference, e.g. YWRtaW46JGFwcjEkYlpydmYvUFYkSHBHSlhqZU1EN0ZON2kyYndsMVRNMQoK |
 | adminUser.existingSecret | string | `""` | use an existing secret for admin user |
-| adminUser.name | string | `"YWRtaW4K"` | copy the username in base64 as a reference |
-| adminUser.password | string | `"bXlTZWNyZXRQYXNzd29yZAo="` | copy the password as base64 for the admin user here as a reference |
+| adminUser.name | string | `""` | copy the username in base64 as a reference, e.g. YWRtaW4K |
+| adminUser.password | string | `""` | copy the password as base64 for the admin user here as a reference e.g. bXlTZWNyZXRQYXNzd29yZAo= |
 | adminUser.secretKeys.auth | string | `"auth"` |  |
 | adminUser.secretKeys.name | string | `"name"` |  |
 | adminUser.secretKeys.password | string | `"password"` |  |
@@ -36,8 +42,8 @@ A Helm chart for Kubernetes to deploy LibreTranslate API
 | appConfig.host | string | `"0.0.0.0"` | Set host to bind the server to (Default: 127.0.0.1) |
 | appConfig.loadOnly | string | `""` | Set available languages (Default: Empty (use all from argostranslate)) |
 | appConfig.metricsAuthToken | string | `""` | Protect the /metrics endpoint by allowing only clients that have a valid Authorization Bearer token (Default: Empty (no auth required)) |
-| appConfig.port | string | `"5000"` | Set port to bind the server to (Default: 5000) |
-| appConfig.reqLimit | string | `"null"` | Set maximum number of requests per minute per client (outside of limits set by api keys) (Default: No limit) |
+| appConfig.port | string | `"5000"` | Set port to bind the server to |
+| appConfig.reqLimit | string | `"null"` | Set maximum number of requests per minute per client (outside of limits set by api keys). The default is "null" which means "no limit". If you set this to "null", and you provide an api key secret, we will set the default api key requests per minute to 120 by default, as you MUST set an api key limit |
 | appConfig.reqLimitStorage | string | `"memory://"` | Storage URI to use for request limit data storage. See Flask Limiter |
 | appConfig.sharedStorage | string | `"memory://"` | Shared storage URI to use for multi-process data sharing (e.g. when using gunicorn) |
 | appConfig.threads | string | `"4"` | Set number of threads (Default: 4) |
@@ -46,19 +52,19 @@ A Helm chart for Kubernetes to deploy LibreTranslate API
 | appSettings.debug | string | `"false"` | Enable debug environment (Default: Disabled) |
 | appSettings.disableFilesTranslation | string | `"false"` | Disable files translation (Default: File translation allowed) |
 | appSettings.disableWebUi | string | `"false"` | Disable web ui (Default: Web Ui enabled) |
-| appSettings.existingSecret | string | `""` | use an existing secret for api key origin and secret |
+| appSettings.existingSecret | string | `""` | use an existing Kubernetes Secret for api key origin and secret |
 | appSettings.metrics | string | `"false"` | Enable the /metrics endpoint for exporting Prometheus usage metrics (Default: Disabled) |
 | appSettings.requireApiKeyOrigin | string | `""` | Require use of an API key for programmatic access to the API, unless the request origin matches this domain (Default: No restrictions on domain origin) |
-| appSettings.requireApiKeySecret | string | `""` | Require use of an API key for programmatic access to the API, unless the client also sends a secret match (Default: No secrets required) |
-| appSettings.secretKeys.apiKeyorigin | string | `""` |  |
-| appSettings.secretKeys.apiKeysecret | string | `"secret"` |  |
+| appSettings.requireApiKeySecret | string | `""` | Set this to an api key secret you'd like to use, or an existing k8s Secret use appSettings.existingSecret and appSettings.secretKeys.apiKeySecret. This currently acts as the default API Key. Uses appConfig.reqLimit as the default requests per minute. If you do not set appConfig.reqLimit (or leave it as "null"), the default requests per minute is 120 |
+| appSettings.secretKeys.apiKeyOrigin | string | `""` | key in existing Kubernetes Secret for api key origin. If set, ignores appSettings.requireApiKeyOrigin |
+| appSettings.secretKeys.apiKeySecret | string | `"secret"` | key in existing Kubernetes Secret for api key secret. If set, ignores appSettings.requireApiKeySecret |
 | appSettings.ssl | string | `"false"` | Enable SSL (Default: Disabled) |
 | appSettings.suggestions | string | `"false"` | Allow user suggestions (Default: Disabled) |
 | appSettings.updateModels | string | `"false"` | Update language models at startup (Default: Only on if no models found) |
 | fullnameOverride | string | `""` | Full name of the deployment to override the default one |
-| image.pullPolicy | string | `"Always"` |  |
-| image.repository | string | `"libretranslate/libretranslate"` |  |
-| image.tag | string | `"latest"` |  |
+| image.pullPolicy | string | `"IfNotPresent"` | if you set the image tag to latest, set the pull policy to "latest" |
+| image.repository | string | `"libretranslate/libretranslate"` | default image is pulled from docker hub |
+| image.tag | string | `""` | this defaults to appVersion in Chart.yaml, but you can override it |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations."nginx.ingress.kubernetes.io/proxy-body-size" | string | `"10m"` |  |
 | ingress.className | string | `""` | set this to the name of the ingress controller class to use like nginx |
@@ -71,10 +77,12 @@ A Helm chart for Kubernetes to deploy LibreTranslate API
 | livenessProbe | object | `{}` | Liveness probe for kubernetes |
 | nameOverride | string | `""` | Chart name override |
 | persistence.db.accessMode | string | `"ReadWriteOnce"` |  |
+| persistence.db.existingClaim | string | `""` | use an existing persistent volume claim for the database. Setting this will ignore all other persistence.db parameters |
 | persistence.db.size | string | `"1Gi"` |  |
 | persistence.db.storageClass | string | `""` |  |
 | persistence.enabled | bool | `false` |  |
 | persistence.models.accessMode | string | `"ReadWriteOnce"` |  |
+| persistence.models.existingClaim | string | `""` | use an existing persistent volume claim for the models. Setting this will ignore all other persistence.models parameters |
 | persistence.models.size | string | `"10Gi"` | as of August 2023, the models are about 6.6GB in size for all languages |
 | persistence.models.storageClass | string | `""` |  |
 | podAnnotations | object | `{}` | Extra annotations for pods |

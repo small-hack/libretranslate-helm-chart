@@ -42,25 +42,55 @@ spec:
       {{- if .Values.persistence.enabled }}
       initContainers:
         - name: volume-permissions-and-pre-install-models
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           command:
-          - /bin/bash
-          - -c
-          - |
-            mkdir -p /home/libretranslate/.local/share/argos-translate/packages
-            chown -R 1032:1032 /home/libretranslate/.local /app/db
+            - /bin/bash
+            - -c
+            - |
+              mkdir -p /home/libretranslate/.local/share/argos-translate/packages
+              chown -R 1032:1032 /home/libretranslate/.local /app/db
 
-            if [ ! "$(ls -A /home/libretranslate/.local/share/argos-translate/packages)" ]; then
-              echo "Installing models... this can take quite a while depending on your internet connection."
-              /app/venv/bin/python /app/scripts/install_models.py --load_only_lang_codes {{ .Values.appConfig.loadOnly | quote }}
-            else
-              echo "The models directory is not empty, skipping model installation."
-            fi
+              if [ ! "$(ls -A /home/libretranslate/.local/share/argos-translate/packages)" ]; then
+                echo "Installing models... this can take quite a while depending on your internet connection."
+                /app/venv/bin/python /app/scripts/install_models.py --load_only_lang_codes {{ .Values.appConfig.loadOnly | quote }}
+              else
+                echo "The models directory is not empty, skipping model installation."
+              fi
+
+              {{- if or .Values.appSettings.requireApiKeySecret (and .Values.appSettings.existingSecret .Values.appSettings.secretKeys.apiKeysecret) }}
+              if [[ ${LT_REQUIRE_API_KEY_SECRET} != "null" ]; then
+                echo "Setting up your default api key..."
+                ltmanage keys add --key ${LT_REQUIRE_API_KEY_SECRET} ${DEFAULT_API_KEY_LIMIT} || echo "something went wrong with adding the api key"
+              fi
+              {{- end }}
           volumeMounts:
-          - name: models-volume
-            mountPath: /home/libretranslate/.local/share/argos-translate
-          - name: db-volume
-            mountPath: {{ .Values.appConfig.apiKeysDbPathMount }}
+            - name: models-volume
+              mountPath: /home/libretranslate/.local/share/argos-translate
+            - name: db-volume
+              mountPath: {{ .Values.appConfig.apiKeysDbPathMount }}
+          {{- if or .Values.appSettings.requireApiKeySecret (and .Values.appSettings.existingSecret .Values.appSettings.secretKeys.apiKeysecret) }}
+          env:
+            - name: LT_REQUIRE_API_KEY_SECRET
+              valueFrom:
+                secretKeyRef:
+                {{- if not .Values.appSettings.existingSecret }}
+                  name: {{ include "libretranslate.fullname" . }}-api-key
+                  key: requireApiKeySecret
+                {{- else }}
+                  name: {{ .Values.appSettings.existingSecret }}
+                  key: {{ .Values.appSettings.secretKeys.apiKeysecret }}
+                {{- end }}
+            {{- if (ne .Values.appConfig.reqLimit "null") }}
+            - name: DEFAULT_API_KEY_LIMIT
+              valueFrom:
+                configMapKeyRef:
+                  name: libretranslate-config
+                  key: reqLimit
+            {{- else }}
+            - name: DEFAULT_API_KEY_LIMIT
+              value: "120"
+            {{- end }}
+          {{- end }}
           {{- if .Values.initContainerSecurityContext }}
           securityContext:
             # forces the mount of the volumes to be mounted as libretranslate user and group
@@ -70,7 +100,7 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
@@ -79,10 +109,10 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           securityContext:
-            {{- if .Values.podSecurityContext }}
-            # forces the mount of the volumes to be mounted as libretranslate user and group
-            # and set permissions to libretranslate:libretranslate
-              {{- toYaml .Values.podSecurityContext | nindent 12 }}
+            {{- with .Values.podSecurityContext }}
+              # forces the mount of the volumes to be mounted as libretranslate user and group
+              # and set permissions to libretranslate:libretranslate
+              {{- toYaml . | nindent 12 }}
             {{- end }}
             allowPrivilegeEscalation: false
           {{- with .Values.readinessProbe }}
@@ -308,17 +338,25 @@ spec:
           - name: models-volume
             mountPath: /home/libretranslate/.local/share/argos-translate
           {{- end }}
-      {{- if and .Values.persistence.enabled (or (eq .Values.persistence.models.accessMode "ReadWriteMany") (eq .Values.persistence.db.accessMode "ReadWriteMany")) }}
+      {{- if and .Values.persistence.enabled (or (eq .Values.persistence.models.accessMode "ReadWriteMany") (eq .Values.persistence.db.accessMode "ReadWriteMany") .Values.persistence.db.existingClaim .Values.persistence.models.existingClaim ) }}
       volumes:
       {{- if eq .Values.persistence.db.accessMode "ReadWriteMany" }}
       - name: db-volume
         persistentVolumeClaim:
+          {{- if .Values.persistence.db.existingClaim }}
+          claimName: {{ .Values.persistence.db.existingClaim }}
+          {{- else }}
           claimName: db-volume
+          {{- end }}
       {{- end }}
       {{- if eq .Values.persistence.models.accessMode "ReadWriteMany" }}
       - name: models-volume
         persistentVolumeClaim:
+          {{- if .Values.persistence.models.existingClaim }}
+          claimName: {{ .Values.persistence.models.existingClaim }}
+          {{- else }}
           claimName: models-volume
+          {{- end }}
       {{- end }}
       {{- end }}
       {{- if .Values.tolerations }}
