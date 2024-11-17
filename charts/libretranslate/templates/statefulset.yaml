@@ -338,65 +338,57 @@ spec:
           - name: models-volume
             mountPath: /home/libretranslate/.local/share/argos-translate
           {{- end }}
-      {{- if and .Values.persistence.enabled (or (eq .Values.persistence.models.accessMode "ReadWriteMany") (eq .Values.persistence.db.accessMode "ReadWriteMany") .Values.persistence.db.existingClaim .Values.persistence.models.existingClaim ) }}
+      {{- if and .Values.persistence.enabled (or .Values.persistence.db.existingClaim .Values.persistence.models.existingClaim) }}
       volumes:
-      {{- if eq .Values.persistence.db.accessMode "ReadWriteMany" }}
-      - name: db-volume
-        persistentVolumeClaim:
-          {{- if .Values.persistence.db.existingClaim }}
-          claimName: {{ .Values.persistence.db.existingClaim }}
-          {{- else }}
-          claimName: db-volume
-          {{- end }}
-      {{- end }}
-      {{- if eq .Values.persistence.models.accessMode "ReadWriteMany" }}
-      - name: models-volume
-        persistentVolumeClaim:
-          {{- if .Values.persistence.models.existingClaim }}
-          claimName: {{ .Values.persistence.models.existingClaim }}
-          {{- else }}
-          claimName: models-volume
-          {{- end }}
-      {{- end }}
-      {{- end }}
-      {{- if .Values.tolerations }}
+        {{- with .Values.persistence.db.existingClaim }}
+        - name: db-volume
+          persistentVolumeClaim:
+            claimName: {{ . }}
+        {{- end }}
+        {{- with .Values.persistence.models.existingClaim }}
+        - name: models-volume
+          persistentVolumeClaim:
+            claimName: {{ . }}
+        {{- end }}
+        {{- end }}{{/* end existingClaim checks */}}
+      {{- with .Values.tolerations }}
       tolerations:
-      {{- toYaml .Values.tolerations   | nindent 6 }}
+      {{- toYaml . | nindent 6 }}
       {{- end }}
-  {{- if and .Values.persistence.enabled (or (eq .Values.persistence.models.accessMode "ReadWriteOnce") (eq .Values.persistence.db.accessMode "ReadWriteOnce")) }}
+  {{- if and .Values.persistence.enabled (or (not .Values.persistence.models.existingClaim) (not .Values.persistence.db.existingClaim)) }}
   # still in beta, but this will allow us to delete the volumes when the statefulset is scaled down
   persistentVolumeClaimRetentionPolicy:
     whenDeleted: Retain
     whenScaled: Delete
   volumeClaimTemplates:
-  {{- if eq .Values.persistence.models.accessMode "ReadWriteOnce" }}
-  - metadata:
-      name: models-volume
-      labels:
-        {{- include "libretranslate.labels" . | nindent 8 }}
-    spec:
-      accessModes:
-        - {{ .Values.persistence.models.accessMode }}
-      resources:
-        requests:
-          storage: {{ .Values.persistence.models.size }}
-      {{- if .Values.persistence.models.storageClass }}
-      storageClassName: {{ .Values.persistence.models.storageClass | quote }}
-      {{- end }}
-  {{- end }}
-  {{- if eq .Values.persistence.db.accessMode "ReadWriteOnce" }}
-  - metadata:
-      name: db-volume
-      labels:
-        {{- include "libretranslate.labels" . | nindent 8 }}
-    spec:
-      accessModes:
-        - {{ .Values.persistence.db.accessMode }}
-      resources:
-        requests:
-          storage: {{ .Values.persistence.db.size }}
-      {{- if .Values.persistence.db.storageClass }}
-      storageClassName: {{ .Values.persistence.db.storageClass | quote }}
-      {{- end }}
-  {{- end }}
+    {{- if not .Values.persistence.models.existingClaim }}
+    - metadata:
+        name: models-volume
+        labels:
+          {{- include "libretranslate.labels" . | nindent 8 }}
+      spec:
+        accessModes:
+          - {{ .Values.persistence.models.accessMode }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.models.size }}
+        {{- with .Values.persistence.models.storageClass }}
+        storageClassName: {{ . | quote }}
+        {{- end }}
+    {{- end }}
+    {{- if not .Values.persistence.db.existingClaim }}
+    - metadata:
+        name: db-volume
+        labels:
+          {{- include "libretranslate.labels" . | nindent 8 }}
+      spec:
+        accessModes:
+          - {{ .Values.persistence.db.accessMode }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.db.size }}
+        {{- with .Values.persistence.db.storageClass }}
+        storageClassName: {{ . | quote }}
+        {{- end }}
+    {{- end }}
   {{- end }}

@@ -10,6 +10,7 @@ This Helm chart deploys a LibreTranslate instance on a Kubernetes cluster using 
 ## Updates from the forked repo include
 
 - using an existing Persistent Volume Claim
+  - we now use `persistence.db.existingClaim` and `persistence.models.existingClaim` instead of relying on the ReadWriteMany check
 - set a default api key
   - using an existing Kubernetes Secret for a default API key
 - add automatic release notes in the GitHub Releases

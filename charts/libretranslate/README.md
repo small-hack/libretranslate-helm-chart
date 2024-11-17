@@ -1,6 +1,6 @@
 # libretranslate
 
-![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![AppVersion: v1.6.2](https://img.shields.io/badge/AppVersion-v1.6.2-informational?style=flat-square)
+![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![AppVersion: v1.6.2](https://img.shields.io/badge/AppVersion-v1.6.2-informational?style=flat-square)
 
 A Helm chart for Kubernetes to deploy LibreTranslate API
 
@@ -76,12 +76,12 @@ A Helm chart for Kubernetes to deploy LibreTranslate API
 | initContainerSecurityContext.runAsUser | int | `0` |  |
 | livenessProbe | object | `{}` | Liveness probe for kubernetes |
 | nameOverride | string | `""` | Chart name override |
-| persistence.db.accessMode | string | `"ReadWriteOnce"` |  |
+| persistence.db.accessMode | string | `""` |  |
 | persistence.db.existingClaim | string | `""` | use an existing persistent volume claim for the database. Setting this will ignore all other persistence.db parameters |
 | persistence.db.size | string | `"1Gi"` |  |
 | persistence.db.storageClass | string | `""` |  |
 | persistence.enabled | bool | `false` |  |
-| persistence.models.accessMode | string | `"ReadWriteOnce"` |  |
+| persistence.models.accessMode | string | `""` |  |
 | persistence.models.existingClaim | string | `""` | use an existing persistent volume claim for the models. Setting this will ignore all other persistence.models parameters |
 | persistence.models.size | string | `"10Gi"` | as of August 2023, the models are about 6.6GB in size for all languages |
 | persistence.models.storageClass | string | `""` |  |
@@ -95,7 +95,7 @@ A Helm chart for Kubernetes to deploy LibreTranslate API
 | resources.requests.cpu | string | `"500m"` |  |
 | resources.requests.memory | string | `"1Gi"` |  |
 | securityContext.fsGroup | int | `1032` |  |
-| service.port | int | `5000` |  |
+| service.port | int | `5000` | targetPort for the service. If you update this, you also need to update appConfig.port to match |
 | service.type | string | `"ClusterIP"` |  |
 | tolerations | list | `[]` | Extra tolerations for pods |
 
