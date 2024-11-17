@@ -58,10 +58,8 @@ spec:
               fi
 
               {{- if or .Values.appSettings.requireApiKeySecret (and .Values.appSettings.existingSecret .Values.appSettings.secretKeys.apiKeysecret) }}
-              if [[ ${LT_REQUIRE_API_KEY_SECRET} != "null" ]; then
-                echo "Setting up your default api key..."
-                ltmanage keys add --key ${LT_REQUIRE_API_KEY_SECRET} ${DEFAULT_API_KEY_LIMIT} || echo "something went wrong with adding the api key"
-              fi
+              echo "Setting up your default api key..."
+              ltmanage keys add --key ${LT_REQUIRE_API_KEY_SECRET} ${DEFAULT_API_KEY_LIMIT} || echo "something went wrong with adding the api key"
               {{- end }}
           volumeMounts:
             - name: models-volume
