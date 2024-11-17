@@ -17,4 +17,4 @@ maintainers:
 appVersion: v1.6.2
 
 # version of the actual helm chart
-version: 0.6.3
+version: 0.6.4
