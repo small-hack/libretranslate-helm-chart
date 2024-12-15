@@ -1,4 +1,5 @@
 # LibreTranslate Helm Chart
+<a href="https://github.com/small-hack/libretranslate-helm-chart/releases"><img src="https://img.shields.io/github/v/release/small-hack/libretranslate-helm-chart?style=plastic&labelColor=blue&color=green&logo=GitHub&logoColor=white"></a>
 
 This Helm chart deploys a LibreTranslate instance on a Kubernetes cluster using the Helm package manager. This is a fork of [libretranslate/helm](https://github.com/libretranslate/helm) with some quality of life updates.
 
