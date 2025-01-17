@@ -14,7 +14,7 @@ maintainers:
     url: https://github.com/jessebot
 
 # renovate: image=libretranslate/libretranslate
-appVersion: v1.6.2
+appVersion: v1.6.3
 
 # version of the actual helm chart
-version: 0.6.5
+version: 0.6.6
