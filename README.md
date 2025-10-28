@@ -1,3 +1,6 @@
+> [!NOTE]
+> This has been migrated to https://git.smallhack.org/small-hack/libretranslate-helm-chart and is also mirrored to https://codeberg.org/small-hack/libretranslate-helm-chart
+
 # LibreTranslate Helm Chart
 <a href="https://github.com/small-hack/libretranslate-helm-chart/releases"><img src="https://img.shields.io/github/v/release/small-hack/libretranslate-helm-chart?style=plastic&labelColor=blue&color=green&logo=GitHub&logoColor=white"></a>
 
